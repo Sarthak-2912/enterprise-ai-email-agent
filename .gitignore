@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual Environment
+.venv/
+
+# Environment Variables
+.env
+
+# Gmail OAuth Credentials
+src/email_agent/gmail/credentials.json
+
+# Gmail Tokens
+src/email_agent/gmail/tokens/
+
+# VS Code
+.vscode/
+
+# Langflow
+.langflow/
+
+# Logs
+*.log
+
+# Cache
+.pytest_cache/
