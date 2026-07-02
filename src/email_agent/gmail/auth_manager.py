@@ -30,7 +30,19 @@ TOKENS_DIR = BASE_DIR / "tokens"
 TOKENS_DIR.mkdir(exist_ok=True)
 
 
-def login():
+def login(email=None):
+
+    if email:
+
+        credentials = load_token(email)
+
+        if credentials and credentials.valid:
+
+            return UserSession(
+                email=email,
+                name=email.split("@")[0],
+                credentials=credentials
+            )
 
     flow = InstalledAppFlow.from_client_secrets_file(
         str(CREDENTIALS_FILE),
