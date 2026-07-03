@@ -77,3 +77,22 @@ def get_user_information(credentials):
     )
 
     return response.json()
+
+def get_session(email: str) -> UserSession:
+    """
+    Return a valid Gmail session.
+
+    If a saved token exists, reuse it.
+    Otherwise perform OAuth login.
+    """
+
+    credentials = load_token(email)
+
+    if credentials is None:
+        return login()
+
+    return UserSession(
+        email=email,
+        name=email,
+        credentials=credentials,
+    )

@@ -1,12 +1,12 @@
-from email_agent.gmail.auth_manager import login
+from email_agent.gmail.auth_manager import get_session
 from email_agent.gmail.gmail_service import GmailService
 
 
 class GmailTool:
 
-    def __init__(self):
+    def __init__(self, email: str):
 
-        session = login()
+        session = get_session(email)
 
         self.gmail = GmailService(session)
 
@@ -14,13 +14,13 @@ class GmailTool:
         self,
         recipients,
         subject,
-        body
+        body,
     ):
 
         self.gmail.send_email(
             recipients,
             subject,
-            body
+            body,
         )
 
         return {
