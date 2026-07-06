@@ -11,10 +11,14 @@ import {
   getConnectedAccounts,
 } from "../services/googleAuth";
 
-import { generateDraft } from "../services/langflow";
+import {
+  generateDraft,
+  sendEmail,
+} from "../services/langflow";
 
 export default function Dashboard() {
   const [accounts, setAccounts] = useState([]);
+  const [recipients, setRecipients] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState("");
 
   const [instruction, setInstruction] = useState("");
@@ -55,30 +59,65 @@ export default function Dashboard() {
     console.log("Generate button clicked");
 
     if (!instruction.trim()) {
-        console.log("Instruction is empty");
-        return;
+      console.log("Instruction is empty");
+      return;
     }
 
     console.log("Instruction:", instruction);
 
     try {
-        console.log("Calling Langflow...");
+      console.log("Calling Langflow...");
 
-        const response = await generateDraft(instruction);
+      const generatedDraft = await generateDraft(instruction);
+      
+      console.log(generatedDraft);
 
-        console.log("Response from Langflow:");
-        console.log(response);
+      setRecipients(generatedDraft.recipients);
 
-        setDraft({
-        subject: "",
-        body: response,
-        });
+      setDraft({
+        subject: generatedDraft.subject,
+        body: generatedDraft.body,
+      });      
 
-        console.log("Draft updated.");
+      console.log("Draft updated.");
     } catch (error) {
-        console.error("Error:", error);
+      console.error("Error:", error);
     }
+  }
+
+  async function handleSendEmail() {
+    if (!selectedAccount) {
+      alert("Please select a Gmail account.");
+      return;
     }
+
+    if (recipients.length === 0) {
+      alert("No recipients found.");
+      return;
+    }
+
+    if (!draft.subject.trim() || !draft.body.trim()) {
+      alert("Draft is empty.");
+      return;
+    }
+
+    try {
+      const result = await sendEmail({
+        sender: selectedAccount,
+        recipients,
+        subject: draft.subject,
+        body: draft.body,
+      });
+
+      console.log("Send Flow Result:");
+      console.log(result);
+
+      alert("Email request completed.");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to send email.");
+    }
+  }
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -105,6 +144,7 @@ export default function Dashboard() {
         <DraftEditor
           draft={draft}
           setDraft={setDraft}
+          onSend={handleSendEmail}
         />
 
       </div>

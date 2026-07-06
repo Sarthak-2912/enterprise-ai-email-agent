@@ -1,6 +1,7 @@
 export default function DraftEditor({
   draft,
   setDraft,
+  onSend,
 }) {
   return (
     <div className="bg-white rounded-xl shadow p-6">
@@ -11,7 +12,7 @@ export default function DraftEditor({
 
       <input
         className="w-full border rounded-lg p-3 mb-4"
-        value={draft.subject}
+        value={draft.subject || ""}
         onChange={(e) =>
           setDraft({
             ...draft,
@@ -24,7 +25,7 @@ export default function DraftEditor({
       <textarea
         rows={10}
         className="w-full border rounded-lg p-3 mb-4"
-        value={draft.body}
+        value={draft.body || ""}
         onChange={(e) =>
           setDraft({
             ...draft,
@@ -34,7 +35,10 @@ export default function DraftEditor({
         placeholder="Email Body"
       />
 
-      <button className="bg-blue-700 text-white px-5 py-3 rounded-lg hover:bg-blue-800">
+      <button
+        onClick={onSend}
+        className="bg-blue-700 text-white px-5 py-3 rounded-lg hover:bg-blue-800"
+      >
         Send Email
       </button>
 
